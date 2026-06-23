@@ -4,16 +4,19 @@
 
 NoxAeApi exposes your Minecraft server's data and actions through a clean HTTP REST API and real-time WebSocket feeds, allowing external applications, dashboards, panels, or automation scripts to interact with your server without needing direct console or RCON access. It also supports aggregating multiple backend servers behind a single network-wide API.
 
+> **⚠️ Proprietary Software.** NoxAeApi is closed-source, commercially licensed software. It is **not** open-source, and this documentation does not grant any rights to the plugin's source code. See [License & Terms](#license--terms) below.
+
 🇮🇩 *Looking for the Indonesian version? See [README.id.md](README.id.md).*
 
 ---
 
 ## Table of Contents
 
+- [License & Terms](#license--terms)
 - [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
-- [Licensing](#licensing)
+- [Licensing (Activation)](#licensing-activation)
 - [Configuration](#configuration)
 - [Authentication](#authentication)
 - [API Endpoints](#api-endpoints)
@@ -24,9 +27,28 @@ NoxAeApi exposes your Minecraft server's data and actions through a clean HTTP R
 - [Swagger UI](#swagger-ui)
 - [In-Game Commands](#in-game-commands)
 - [Permissions](#permissions)
-- [Building From Source](#building-from-source)
+- [Support](#support)
 - [Built With](#built-with)
 - [Version](#version)
+
+---
+
+## License & Terms
+
+NoxAeApi is **proprietary, closed-source software**. It is distributed under a commercial license and is **not** licensed under MIT, GPL, Apache, or any other open-source license.
+
+By downloading, installing, or using NoxAeApi, you agree to the following:
+
+- ✅ You may use the compiled plugin (`.jar`) on the servers covered by your purchased license.
+- ✅ You may configure the plugin via `config.yml` and use its public REST/WebSocket API as documented below.
+- ❌ You may **not** decompile, reverse-engineer, or attempt to bypass the license/obfuscation system.
+- ❌ You may **not** redistribute, resell, leak, or share the plugin jar or your license key with third parties.
+- ❌ You may **not** create derivative works from the plugin's internals.
+- 🔒 The plugin requires an active, valid license key (via [NxGate](https://www.noxlydev.xyz)) to run, and periodically re-verifies that license online.
+
+This documentation describes how to **install, configure, and use** the public API surface of NoxAeApi. It does not include or imply access to the plugin's source code.
+
+For full terms, pricing, and support, refer to the official listing/storefront where the plugin was purchased, or contact the author via [noxlydev.xyz](https://www.noxlydev.xyz).
 
 ---
 
@@ -59,8 +81,7 @@ NoxAeApi exposes your Minecraft server's data and actions through a clean HTTP R
 
 - Java 21+
 - PaperMC / Spigot / Bukkit, API version 1.21+
-- Maven (only if building from source)
-- A valid **NxGate license key** (see [Licensing](#licensing))
+- A valid **NxGate license key** (see [Licensing (Activation)](#licensing-activation))
 
 **Optional soft-dependencies** (endpoints degrade gracefully / return `503` if missing):
 - [Vault](https://www.spigotmc.org/resources/vault.34315/) — required for `/v1/economy/*` endpoints
@@ -68,7 +89,19 @@ NoxAeApi exposes your Minecraft server's data and actions through a clean HTTP R
 - [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) — required for `/v1/placeholders/replace`
 - **NoxAuth** — required for `/v1/noxauth/*` endpoints
 
-## Licensing
+---
+
+## Installation
+
+1. Purchase/download the official `NoxAeApi.jar` release from the platform where you obtained your license.
+2. Copy the jar into your server's `plugins/` folder.
+3. Start the server once so `plugins/NoxAeApi/config.yml` is generated.
+4. Open `config.yml` and set your `license-key` (from your NxGate dashboard), change the default `key`, and adjust any other options you need (port, TLS, security, webhooks, network, etc.).
+5. Restart the server to apply the configuration, or run `/noxaeapi reload`.
+
+---
+
+## Licensing (Activation)
 
 NoxAeApi is a **licensed plugin**, protected via **NxGate** (`xyz.noxlydev.nxgate`):
 
@@ -446,32 +479,32 @@ All subcommands require the `noxaeapi.admin` permission.
 
 ---
 
-## Building From Source
+## Support
 
-```bash
-mvn clean package
-```
+NoxAeApi is closed-source software — there is no public source repository to build from or contribute to.
 
-The build pipeline:
-1. **Compile** — Java 21, with the Javalin OpenAPI annotation processor generating the Swagger spec at compile time.
-2. **Shade** — `maven-shade-plugin` bundles all dependencies into a single fat jar.
-3. **Obfuscate** — `proguard-maven-plugin` obfuscates `net.wumx.noxaeapi.**` and `xyz.noxlydev.nxgate.**` classes only (third-party libraries inside the fat jar are passed through untouched), producing `target/NoxAeApi-<version>-obfuscated.jar`.
+If you run into issues:
+1. Re-check this documentation, especially [Configuration](#configuration) and [Authentication](#authentication).
+2. Make sure required soft-dependencies (Vault / LuckPerms / PlaceholderAPI / NoxAuth) are installed if you're using related endpoints.
+3. Check `plugins/NoxAeApi/logs/audit.log` (if audit logging is enabled) and your server console for error details.
+4. Contact support through the official storefront/listing where you purchased your license, or via [noxlydev.xyz](https://www.noxlydev.xyz).
 
-Use the `-obfuscated.jar` artifact for production deployments.
+Please have your license key, plugin version, and server log ready when reaching out — do **not** share your license key publicly.
 
 ---
 
 ## Built With
 
-- [Javalin 6.7.0](https://javalin.io/) — HTTP framework
-- [Jetty 11](https://www.eclipse.org/jetty/) — embedded web server (HTTP + WebSocket)
+NoxAeApi is built on top of (among others):
+
+- [Javalin](https://javalin.io/) — HTTP framework
+- [Jetty](https://www.eclipse.org/jetty/) — embedded web server (HTTP + WebSocket)
 - [Jackson](https://github.com/FasterXML/jackson) — JSON processing
-- [LuckPerms API 5.4](https://luckperms.net/) — permission integration
-- [VaultAPI 1.7](https://github.com/MilkBowl/VaultAPI) — economy integration
-- [PlaceholderAPI 2.11.5](https://github.com/PlaceholderAPI/PlaceholderAPI) — placeholder integration
+- [LuckPerms API](https://luckperms.net/) — permission integration
+- [VaultAPI](https://github.com/MilkBowl/VaultAPI) — economy integration
+- [PlaceholderAPI](https://github.com/PlaceholderAPI/PlaceholderAPI) — placeholder integration
 - [Item-NBT-API](https://github.com/tr7zw/Item-NBT-API) — inventory/item serialization
 - [NxGate](https://www.noxlydev.xyz) — license validation
-- ProGuard 7.4.2 — code obfuscation for release builds
 
 ---
 
